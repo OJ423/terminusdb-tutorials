@@ -3,7 +3,7 @@
 In this demo tutorial, we will show how the diff and patch operation can be applied to monitor changes in TerminusDB schema, TerminusDB documents, JSON schema, and with other document databases like MongoDB.
 
 ### Quick Links
-| [Diff & Patch TerminusDB Python](python) | [Diff & Patch MongoDB](mongodb)  | [Diff & Patch TerminusDB Javascript](javascript)  |
+| [Diff & Patch TerminusDB Python](https://github.com/OJ423/terminusdb-tutorials/tree/master/diff_patch#python) | [Diff & Patch MongoDB](https://github.com/OJ423/terminusdb-tutorials/tree/master/diff_patch#mongodb)  | [Diff & Patch MongoDB Javascript](https://github.com/OJ423/terminusdb-tutorials/tree/master/diff_patch#javascript)  |
 | ----------- | ----------- | ----------- |
 
 ## A little background on JSON diff and patch
