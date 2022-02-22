@@ -127,7 +127,7 @@ pprint(result_patch.content)
 
 See the [full script here](./diff_demo.py)
 
-## [Using Diff and Patch with MongoDB]<a name="mongodb"></a>
+## Using Diff and Patch with MongoDB <a name="mongodb"></a>
 
 In [this script](./mongo_demo.py) we demonstrate how diff and patch can be used in your MongoDB workflow. The first part of the script is  the [MongoDB tutorial on how to use Pymongo](https://www.mongodb.com/languages/python) and in the second part we demonstrate the extra step to review the changes before applying a patch to your MongoDB collection.
 
@@ -231,7 +231,7 @@ collection_name.update_one(before, {"$set": patch.update})
 
 See the [full script here](./mongo_demo.py)
 
-## [Using Diff and Patch with MongoDB JavaScript] <a name="javascript"></a>
+## Using Diff and Patch with MongoDB JavaScript <a name="javascript"></a>
 Just like last section, diff and patch can be used to compare documents and schemas to see what has been changed using the JavaScript client. 
 
 In [this script](./diff_patch.js) we will demonstrate it.
