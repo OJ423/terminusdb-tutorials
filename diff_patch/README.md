@@ -1,16 +1,36 @@
-# Diff and Patch with TerminusDB/ TerminusX Demo
+# Compare JSON Documents and Apply Patches with TerminusDB and TerminusX
 
-In this demo tutorial, we will show how the diff and patch operation can be applied to monitor changes in TerminusDB schema, TerminusDB documents, JSON schema and with other document database like MongoDB.
+In this demo tutorial, we will show how the diff and patch operation can be applied to monitor changes in TerminusDB schema, TerminusDB documents, JSON schema, and with other document databases like MongoDB.
 
-To install the Python client, [check out here](https://github.com/terminusdb/terminusdb-client-python#installation).
+### Quick Links
+| [Diff & Patch TerminusDB Python](python) | [Diff & Patch MongoDB](mongodb)  | [Diff & Patch TerminusDB Javascript](javascript)  |
+| ----------- | ----------- | ----------- |
 
-Make sure you have the [docker container running on `localhost`](https://github.com/terminusdb/terminusdb-bootstrap).
+## A little background on JSON diff and patch
 
-## Using Diff and Patch with TerminusDB (Python)
+A fundamental tool in Git’s strategy for distributed management of source code is the concept of the diff and the patch. These foundational operations are what make git possible. Diff is used to construct a patch that can be applied to an object such that the final state makes sense for some value of makes sense.
 
-In [this script](./diff_demo.py) we demonstrate in parts with various objects (TerminusDB schema, TerminusDB documents or just a JSON schema) that `diff` will give you a `Patch` object back and with that object you can apply `patch` to modify an object.
+But what about structured data? Do similiar situations arise with structured data that require diff and patch operations? Sure they do.
 
-In terminusDB all documents and schemas are represented in JSON-LD format. With diff and patch, we can easily compare any documents and schemas to see what has been changed. Consider documents as a Python object:
+In applications, when two or more people are updating the same object, such as an online store, this sort of curation operation is often achieved with a lock on the object. Which means only one person can win. And locks are a massive source of pain, not only because you can’t achieve otherwise perfectly reasonable concurrent operations, but because you risk getting stale locks and having to figure out when to release them.
+
+When more than one person is working on a dataset, there are often times when there is a conflict. Without adequate workflow and conflict measures, quite often someone's change gets squashed and as a result data can start to become inaccurate. In the long run, this causes all sorts of issues with reporting, customer service, and business intelligence. This is where diff and patch comes in, where users can see a before and after state each time they submit their changes to the database. Here, any conflicts can be flagged and a human review can oversee these changes to ensure data accuracy in the long run. Better data, better decisions.
+
+## [Using Diff and Patch with TerminusDB Python](#python)
+
+### Prerequisits
+
+You will need to install the TerminusDB Python client, [check out here](https://github.com/terminusdb/terminusdb-client-python#installation).
+
+Ensure you have the [docker container running on `localhost`](https://github.com/terminusdb/terminusdb-bootstrap).
+
+---
+
+In [this script](./diff_demo.py) we demonstrate how `diff` will give you a `Patch` object back and with that object you can apply `patch` to modify an object and we show this for TerminusDB schema, TerminusDB documents and JSON schema.
+
+In terminusDB, documents and schemas are represented in JSON-LD format. With diff and patch, we can easily compare any documents and schemas to see what has been changed. 
+
+Let us look at a document as a Python object:
 
 ```
 class Person(DocumentTemplate):
@@ -21,14 +41,14 @@ jane = Person(name="Jane", age=18)
 janine = Person(name="Janine", age=18)
 ```
 
-You can directly apply diff to get a patch object:
+You can directly apply a diff to get a patch object:
 
 ```
 result_patch = client.diff(jane, janine)
 
 pprint(result_patch.content)
 ```
-With the patch object (`result_patch` here), you can either review it's content or you can apply it to an object and you can get an after object back.
+With the patch object (`result_patch` here), you can either review its content or you can apply it to an object and you can get an after object back.
 
 ```
 after_patch = client.patch(jane, result_patch)
@@ -37,7 +57,7 @@ pprint(after_patch)
 assert after_patch == janine._obj_to_dict()
 ```
 
-As you see, the `after_patch` object (document) is the same as `janine`. In other application, you can put this document back in the database using `replace_document` to commit this change.
+As you can see, the `after_patch` object (document) is the same as `janine`. You can put this document back in the database using `replace_document` to commit this change.
 
 Diff and patch also works with JSON-LD documents:
 
@@ -68,7 +88,9 @@ result_patch = client.diff(schema1, schema2)
 pprint(result_patch.content)
 ```
 
-Note that diff and patch will work on most JSON formats. Another application is to compare 2 JSON schemas:
+Note that diff and patch will work on most JSON formats. 
+
+Another application example is to compare 2 JSON schemas:
 
 ```
 schema1 = {
@@ -105,11 +127,13 @@ pprint(result_patch.content)
 
 See the [full script here](./diff_demo.py)
 
-## Using Diff and Patch with MongoDB
+## [Using Diff and Patch with MongoDB](#monodb)
 
-In [this script](./mongo_demo.py) we demonstrate how this can be used in your MongoDB workflow. The first part of the script is just the [tutorial here on how to use Pymongo](https://www.mongodb.com/languages/python) and in the second part we demonstrate an extra step to review the changes before apply to your collection on MongoDB.
+In [this script](./mongo_demo.py) we demonstrate how diff and patch can be used in your MongoDB workflow. The first part of the script is  the [MongoDB tutorial on how to use Pymongo](https://www.mongodb.com/languages/python) and in the second part we demonstrate the extra step to review the changes before applying a patch to your MongoDB collection.
 
-As we discover in the last session, diff and patch can apply to any JSON format. Since MongoBD also use JSON format to describe their data, we can use diff and patch to do the similar thing. Here we use the tutorial for Pymongo as an example:
+As we discovered in the last section, diff and patch can apply to any JSON format. Since MongoBD also uses JSON format to describe their data, we can use diff and patch to do similar things. 
+
+Here we use the tutorial for Pymongo as an example:
 
 ```
 client = MongoClient(os.environ["MONGO_CONNECTION_STRING"])
@@ -180,7 +204,7 @@ Again, we can review before making the change at MongoDB:
 collection_name.update_one(patch.before, {"$set": patch.update})
 ```
 
-There's also another more complicated example:
+This is another more complicated example:
 
 ```
 expiry_date = '2021-07-15T00:00:00.000'
@@ -207,11 +231,13 @@ collection_name.update_one(before, {"$set": patch.update})
 
 See the [full script here](./mongo_demo.py)
 
-## Using Diff and Patch with TerminusDB (JavaScript)
+## [Using Diff and Patch with MongoDB JavaScript](#javascript)
 
-Just like last session, diff and patch can be used to compare any documents and schemas to see what has been changed with the JavaScript client. In [this script](./diff_patch.js) we will demonstrate it.
+Just like last section, diff and patch can be used to compare documents and schemas to see what has been changed using the JavaScript client. 
 
-In here we created a function called `patchMongo`:
+In [this script](./diff_patch.js) we will demonstrate it.
+
+We created a function called `patchMongo`:
 
 ```
 const mongoPatch = function(patch){
@@ -242,7 +268,7 @@ const mongoPatch = function(patch){
 }
 ```
 
-Where we create an object that we can put back to update the data in MongoDB:
+We created an object that we can put back to update the data in MongoDB:
 
 ```
 let patchPromise = client.getDiff(jane,janine,{});
